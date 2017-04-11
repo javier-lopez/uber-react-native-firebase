@@ -12,17 +12,51 @@ import MapView from 'react-native-maps';
 var {height, width} = Dimensions.get('window');
 
 export default class UberFooBarReactNativeFirebase extends Component {
+    state = {
+        mapRegion:   null,
+        gpsAccuracy: null
+    }
+    watchID = null
+
+    componentWillMount() {
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+            let region = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                latitudeDelta: 0.00922*1.5,
+                longitudeDelta: 0.00421*1.5
+            }
+
+            this.onRegionChange(region, position.coords.accuracy);
+        });
+    }
+
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchID);
+    }
+
+    onRegionChange(region, gpsAccuracy) {
+        this.setState({
+            mapRegion: region,
+            gpsAccuracy: gpsAccuracy || this.state.gpsAccuracy
+        });
+    }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <MapView style={styles.map} initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4326,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-        }} />
-      </View>
-    );
+      const { mapRegion, gpsAccuracy } = this.state;
+      if (mapRegion) {
+          return (
+              <View style={styles.container}>
+                <MapView style={styles.map} initialRegion={mapRegion} onRegionChange={this.onRegionChange.bind(this)} />
+              </View>
+          );
+      } else {
+          return (
+            <View style={styles.container}>
+                <Text style={styles.loading}>Cargando ... </Text>
+            </View>
+         );
+      }
   }
 }
 
@@ -36,6 +70,11 @@ const styles = StyleSheet.create({
   map: {
     height: height,
     width: width
+  },
+  loading: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
   },
 });
 
