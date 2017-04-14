@@ -10,10 +10,13 @@ import MapView from 'react-native-maps';
 
 var {height, width} = Dimensions.get('window');
 
+const uberIcon = require('../assets/img/uber.png')
+
 export default class UberFooBarReactNativeFirebase extends Component {
     state = {
         mapRegion:   null,
         passengerLocation: null,
+        ubers: null,
         gpsAccuracy: null
     }
     watchID = null
@@ -72,26 +75,62 @@ export default class UberFooBarReactNativeFirebase extends Component {
         });
     }
 
+    getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    randomNearbyPosition(coords) {
+        return {
+            latitude:  coords.latitude  + this.getRandomInt(-100,100)/10000,
+            longitude: coords.longitude + this.getRandomInt(-100,100)/10000
+        }
+    }
+
+    generateRandomUbers(coords) {
+        return [
+            { id: 1, name: 'Ana',       position: this.randomNearbyPosition(coords) },
+            { id: 2, name: 'John',      position: this.randomNearbyPosition(coords) },
+            { id: 3, name: 'Emely',     position: this.randomNearbyPosition(coords) },
+            { id: 4, name: 'Mike',      position: this.randomNearbyPosition(coords) },
+            { id: 5, name: 'Christene', position: this.randomNearbyPosition(coords) },
+        ];
+    }
+
     onPassengerLocationChange(coords) {
         this.setState({
             passengerLocation: coords
         });
+
+        this.setState({
+            ubers: this.generateRandomUbers(coords)
+        });
+
+        console.log(this.state.passengerLocation);
+        console.log(this.state.ubers);
     }
 
   render() {
-      const { passengerLocation, mapRegion, gpsAccuracy} = this.state;
+      const { passengerLocation, mapRegion, ubers, gpsAccuracy} = this.state;
       //console.log('mapRegion: '        , mapRegion);
       //console.log('passengerLocation: ', passengerLocation);
       //console.log('gpsAccuracy: '      , gpsAccuracy);
+      //console.log('ubers: '            , ubers);
 
-      if (mapRegion && passengerLocation) {
+      if (mapRegion && passengerLocation && ubers) {
           return (
               <View style={styles.container}>
                 <MapView style={styles.map} initialRegion={mapRegion}
                          onRegionChange={this.onRegionChange.bind(this)}>
+
                   <MapView.Marker draggable coordinate={passengerLocation}
                                   onDragEnd = {(e) => {this.onPassengerLocationChange(e.nativeEvent.coordinate)}}>
                   </MapView.Marker>
+
+                  {ubers.map((uber, index) =>
+                      <MapView.Marker title={uber.name} image={uberIcon}
+                      style={styles.uber} coordinate={uber.position} key={uber.id}/>
+                  )}
+
                 </MapView>
               </View>
           );
@@ -121,4 +160,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
+  uber: {
+    flex:   1,
+    width:  20,
+    height: 20
+  }
 });
