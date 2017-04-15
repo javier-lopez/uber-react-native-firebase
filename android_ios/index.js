@@ -4,6 +4,7 @@ import {
   View,
   Image,
   Text,
+  TouchableOpacity,
   Dimensions
 } from 'react-native';
 
@@ -150,6 +151,20 @@ export default class UberFooBarReactNativeFirebase extends Component {
                   )}
 
                 </MapView>
+
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button}>
+                        <Text>UberX</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.button}>
+                        <Text>Uber Black</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.button}>
+                        <Text>Uber VIP</Text>
+                    </TouchableOpacity>
+                </View>
               </View>
           );
       } else {
@@ -192,5 +207,16 @@ const styles = StyleSheet.create({
   search: {
     zIndex: 10, //move to front
     backgroundColor: 'rgba(255,255,255,0.8)',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 10,
+    padding: 10,
+    margin:  10,
   },
 });
