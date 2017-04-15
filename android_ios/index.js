@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
+  Image,
+  Text,
   Dimensions
 } from 'react-native';
 
 import MapView from 'react-native-maps';
 
-var {height, width} = Dimensions.get('window');
+var {GooglePlacesAutocomplete} = require('react-native-google-places-autocomplete');
 
-const uberIcon = require('../assets/img/uber.png')
+//replaced by ...StyleSheet.absoluteFillObject
+//var {height, width} = Dimensions.get('window');
+
+const uberIcon   = require('../assets/img/uber.png')
+const searchIcon = require('../assets/img/search.png')
 
 export default class UberFooBarReactNativeFirebase extends Component {
     state = {
@@ -119,6 +124,19 @@ export default class UberFooBarReactNativeFirebase extends Component {
       if (mapRegion && passengerLocation && ubers) {
           return (
               <View style={styles.container}>
+
+                <GooglePlacesAutocomplete style={styles.search}
+                                          placeholder='Choose Your Location'
+                                          minLength={3} autoFocus={false}
+                                          fetchDetails={true}
+                                          enablePoweredByContainer={false}
+                                          currentLocation={false}
+                                          renderLeftButton={() => <Image style={styles.searchIcon} source={searchIcon}/>}
+                                          query={{
+                                            key: 'AIzaSyDF_xPY72A9X_dy13ud06Lg6Die6BJ_98M',
+                                            language: 'es',
+                                            types: 'geocode', }} />
+
                 <MapView style={styles.map} initialRegion={mapRegion}
                          onRegionChange={this.onRegionChange.bind(this)}>
 
@@ -148,12 +166,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   map: {
-    height: height,
-    width: width
+    ...StyleSheet.absoluteFillObject,
+    //TODO >> find out a smarter way to make room for the location search bar
+    marginTop: 42,
   },
   loading: {
     fontSize: 20,
@@ -163,6 +181,16 @@ const styles = StyleSheet.create({
   uber: {
     flex:   1,
     width:  20,
-    height: 20
-  }
+    height: 20,
+  },
+  //TODO >> find out a smarter way to make room for the search icon
+  searchIcon: {
+    margin:      13,
+    marginLeft:   8,
+    marginRight:  0,
+  },
+  search: {
+    zIndex: 10, //move to front
+    backgroundColor: 'rgba(255,255,255,0.8)',
+  },
 });
