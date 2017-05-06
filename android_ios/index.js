@@ -129,41 +129,37 @@ export default class UberFooBarReactNativeFirebase extends Component {
             ubers:             this.generateRandomUbers(coords),
         });
 
-        console.log(this.state.passengerLocation);
-        console.log(this.state.ubers);
+        //console.log(this.state.passengerLocation);
+        //console.log(this.state.ubers);
     }
 
     updateTypeCallback() {
         this.setState({ubers: this.generateRandomUbers(this.state.passengerLocation)});
     }
 
+    updateRegionCallback() {
+        let coords = {
+            latitude:  this.state.mapRegion.latitude,
+            longitude: this.state.mapRegion.longitude,
+        }
+        this.onPassengerLocationChange(coords);
+    }
+
     render() {
         //Too much magic!!!!
         const { mapRegion, passengerLocation, ubers, gpsAccuracy} = this.state;
+        //console.log('render()');
         //console.log('mapRegion: '        , mapRegion);
         //console.log('passengerLocation: ', passengerLocation);
         //console.log('gpsAccuracy: '      , gpsAccuracy);
         //console.log('ubers: '            , ubers);
-        console.log('render()');
 
         if (mapRegion && passengerLocation && ubers) {
             return (
                 <View style={styles.container}>
-
-                  <GooglePlacesAutocomplete style={styles.search}
-                                            placeholder='Choose Your Location'
-                                            minLength={3} autoFocus={false}
-                                            fetchDetails={true}
-                                            enablePoweredByContainer={false}
-                                            currentLocation={false}
-                                            renderLeftButton={() => <Image style={styles.searchIcon} source={searchIcon}/>}
-                                            query={{
-                                              key:      'AIzaSyDF_xPY72A9X_dy13ud06Lg6Die6BJ_98M',
-                                              language: 'es',
-                                              types:    'geocode', }} />
-
-                  <MapView style={styles.map} initialRegion={mapRegion}
-                           onRegionChange={this.onRegionChange.bind(this)}>
+                    <MapView style={styles.map} region={mapRegion}
+                             loadingEnabled={true} loadingIndicatorColor="#999999"
+                             onRegionChange={this.onRegionChange.bind(this)}>
 
                     <MapView.Marker draggable coordinate={passengerLocation}
                                     onDragEnd = {(e) => {this.onPassengerLocationChange(e.nativeEvent.coordinate)}}>
@@ -174,24 +170,59 @@ export default class UberFooBarReactNativeFirebase extends Component {
                         style={styles.uber} coordinate={uber.position} key={uber.id}/>
                     )}
 
-                  </MapView>
+                    </MapView>
 
-                  <View style={styles.buttonContainer}>
-                      <TouchableOpacity style={styles.button} onPress={() => {
-                          this.setState({type: 'pool'}, this.updateTypeCallback); }}>
-                          <Text>Uber Pool</Text>
-                      </TouchableOpacity>
+                    <View style={styles.searchContainer}>
+                        <GooglePlacesAutocomplete
+                            styles={searchBarStyles}
+                            placeholder='Choose Your Location'
+                            minLength={3} autoFocus={false}
+                            fetchDetails={true}
+                            enablePoweredByContainer={false}
+                            currentLocation={false}
+                            renderLeftButton={() => <Image style={searchBarStyles.searchIcon} source={searchIcon}/>}
+                            //currentLocation={true}
+                            //currentLocationLabel='Current Location'
 
-                      <TouchableOpacity style={styles.button} onPress={() => {
-                          this.setState({type: 'x'}, this.updateTypeCallback); }}>
-                          <Text>Uber X</Text>
-                      </TouchableOpacity>
+                            onPress={(data, details = null) => {
+                                     //'details' is initialized on fetchDetails = true
+                                      let newRegion = {
+                                          latitude:       details.geometry.location.lat,
+                                          longitude:      details.geometry.location.lng,
+                                          latitudeDelta:  this.state.mapRegion.latitudeDelta,
+                                          longitudeDelta: this.state.mapRegion.longitudeDelta,
+                                      }
 
-                      <TouchableOpacity style={styles.button} onPress={() => {
-                          this.setState({type: 'black'}, this.updateTypeCallback); }}>
-                          <Text>Uber Black</Text>
-                      </TouchableOpacity>
-                  </View>
+                                      //investigate why it's required to use a callback function
+                                      //to force a re-render()
+                                      this.setState({mapRegion: newRegion}, this.updateRegionCallback);
+
+                                      //console.log('details', details);
+                                      //console.log('lat', details.geometry.location.lat);
+                                      //console.log('lng', details.geometry.location.lng);
+                                    }}
+                            query={{
+                              key:      'AIzaSyDF_xPY72A9X_dy13ud06Lg6Die6BJ_98M',
+                              language: 'es',
+                              types:    'geocode', }} />
+                    </View>
+
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={() => {
+                            this.setState({type: 'pool'}, this.updateTypeCallback); }}>
+                            <Text>Uber Pool</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button} onPress={() => {
+                            this.setState({type: 'x'}, this.updateTypeCallback); }}>
+                            <Text>Uber X</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button} onPress={() => {
+                            this.setState({type: 'black'}, this.updateTypeCallback); }}>
+                            <Text>Uber Black</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             );
         } else {
@@ -205,45 +236,57 @@ export default class UberFooBarReactNativeFirebase extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-    //TODO >> find out a smarter way to make room for the location search bar
-    marginTop: 42,
-  },
-  loading: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  uber: {
-    flex:   1,
-    width:  20,
-    height: 20,
-  },
-  //TODO >> find out a smarter way to make room for the search icon
-  searchIcon: {
-    margin:      13,
-    marginLeft:   8,
-    marginRight:  0,
-  },
-  search: {
-    zIndex: 10, //move to front
-    backgroundColor: 'rgba(255,255,255,0.8)',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 10,
-    padding: 10,
-    margin:  10,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject,
+        //TODO >> find out a smarter way to make room for the location search bar
+        //marginTop: 42,
+    },
+    loading: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    uber: {
+        flex:   1,
+        width:  20,
+        height: 20,
+    },
+    searchContainer: {
+        flex: 1,
+        //zIndex: 1, //move to front
+        //backgroundColor: 'rgba(255,255,255,0.8)',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    button: {
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.7)',
+        borderRadius: 10,
+        padding: 10,
+        margin:  10,
+    },
+});
+
+const searchBarStyles = StyleSheet.create({
+    //textInputContainer  : {
+        //backgroundColor : 'rgba(0,0,0,0)',
+    //},
+
+    //loader : {
+        //backgroundColor : "#999999"
+    //},
+
+    //TODO >> find out a smarter way to make room for the search icon
+    searchIcon: {
+      margin:      13,
+      marginLeft:   8,
+      marginRight:  0,
+    },
 });
