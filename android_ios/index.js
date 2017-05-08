@@ -9,6 +9,8 @@ import {
 import MapView from 'react-native-maps';
 var {GooglePlacesAutocomplete} = require('react-native-google-places-autocomplete');
 
+import Loading from './components/Loading'
+
 const uberIcon   = require('../assets/img/uber.png')
 const searchIcon = require('../assets/img/search.png')
 
@@ -199,9 +201,7 @@ export default class UberFooBarReactNativeFirebase extends Component {
             );
         } else {
             return (
-              <View style={styles.container}>
-                  <Text style={styles.loading}>Cargando ... </Text>
-              </View>
+                <Loading />
            );
         }
   }
@@ -217,11 +217,6 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         //TODO >> find out a smarter way to make room for the location search bar
         //marginTop: 42,
-    },
-    loading: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
     },
     uber: {
         flex:   1,
