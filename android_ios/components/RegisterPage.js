@@ -19,29 +19,22 @@ export default class Login extends Component {
     render() {
         if (!this.state.loading) {
             return (
-                <View style={LoginStyles.container}>
-                    <View style={LoginStyles.body}>
+                <View style={RegisterPageStyles.container}>
+                    <View style={RegisterPageStyles.body}>
                     <View>
-                        <Text style={LoginStyles.title}>LoginPage</Text>
+                        <Text style={RegisterPageStyles.title}>RegisterPage</Text>
                         <View style={{margin:15}} />
-                        <TextInput style={LoginStyles.textInput} placeholder='Username'/>
-                        <TextInput style={LoginStyles.textInput} secureTextEntry={true} placeholder='Password' />
+                        <TextInput style={RegisterPageStyles.textInput} placeholder='Username'/>
+                        <TextInput style={RegisterPageStyles.textInput} secureTextEntry={true} placeholder='Password' />
+                        <TextInput style={RegisterPageStyles.textInput} secureTextEntry={true} placeholder='Repeat Password' />
                         <View style={{margin:7}} />
-                        <TouchableHighlight style={LoginStyles.primaryButton} onPress={() => this.props.navigator.push(
+                        <TouchableHighlight style={RegisterPageStyles.primaryButton} onPress={() => this.props.navigator.push(
                                     {
-                                        id:   'PickUpLocationPageId',
-                                        name: 'PickUpLocationPage',
+                                        id:   'RegisteredPageId',
+                                        name: 'RegisteredPage',
                                     }
                                 )}>
-                            <Text style={LoginStyles.primaryButtonText}>Login</Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight style={LoginStyles.transparentButton} onPress={() => this.props.navigator.push(
-                                    {
-                                        id:   'RegisterPageId',
-                                        name: 'RegisterPage',
-                                    }
-                                )}>
-                            <Text style={LoginStyles.transparentButtonText}>Register</Text>
+                            <Text style={RegisterPageStyles.primaryButtonText}>Sign Up</Text>
                         </TouchableHighlight>
                     </View>
                     </View>
@@ -54,7 +47,7 @@ export default class Login extends Component {
     }
 }
 
-const LoginStyles = StyleSheet.create({
+const RegisterPageStyles = StyleSheet.create({
     container: {
         alignItems: 'stretch',
         flex: 1
