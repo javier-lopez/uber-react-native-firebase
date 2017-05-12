@@ -5,6 +5,8 @@ import {
 
 import SplashPage         from './components/SplashPage'
 import LoginPage          from './components/LoginPage'
+import RegisterPage       from './components/RegisterPage'
+import RegisteredPage     from './components/RegisteredPage'
 import PickUpLocationPage from './components/PickUpLocationPage'
 
 export default class UberFooBarReactNativeFirebase extends Component {
@@ -18,6 +20,16 @@ export default class UberFooBarReactNativeFirebase extends Component {
             case 'LoginPageId':
                 return (
                     <LoginPage navigator={navigator} />
+                );
+
+            case 'RegisterPageId':
+                return (
+                    <RegisterPage navigator={navigator} />
+                );
+
+            case 'RegisteredPageId':
+                return (
+                    <RegisteredPage navigator={navigator} />
                 );
 
             case 'PickUpLocationPageId':
