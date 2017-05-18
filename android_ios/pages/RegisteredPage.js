@@ -5,6 +5,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
+var title       = "Sign up completed!"
+var description = "You can now login, redirecting ..."
+
 export default class SplashPage extends Component {
     componentWillMount() {
         var navigator = this.props.navigator;
@@ -16,12 +19,15 @@ export default class SplashPage extends Component {
     }
 
     render() {
+        if (this.props.title)       {title=this.props.title};
+        if (this.props.description) {description=this.props.description};
+
         return (
             <View style={RegisteredPageStyles.container}>
                 <View>
-                    <Text style={RegisteredPageStyles.title}>Sign up completed!</Text>
+                    <Text style={RegisteredPageStyles.title}>{title}</Text>
                     <View style={{margin:15}} />
-                    <Text style={RegisteredPageStyles.loading}>Now you can login, redirecting ...</Text>
+                    <Text style={RegisteredPageStyles.loading}>{description}</Text>
                 </View>
             </View>
         );

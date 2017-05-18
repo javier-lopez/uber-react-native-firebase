@@ -3,43 +3,44 @@ import {
   Navigator,
 } from 'react-native';
 
-import SplashPage         from './components/SplashPage'
-import LoginPage          from './components/LoginPage'
-import RegisterPage       from './components/RegisterPage'
-import RegisteredPage     from './components/RegisteredPage'
-import PickUpLocationPage from './components/PickUpLocationPage'
+import SplashPage         from './pages/SplashPage'
+import LoginPage          from './pages/LoginPage'
+import RegisterPage       from './pages/RegisterPage'
+import RegisteredPage     from './pages/RegisteredPage'
+import PickUpLocationPage from './pages/PickUpLocationPage'
 
 export default class UberFooBarReactNativeFirebase extends Component {
     renderScene(route, navigator) {
         switch(route.id) {
             case 'SplashPageId':
                 return (
-                    <SplashPage navigator={navigator} />
+                    <SplashPage title="Uber App" navigator={navigator}/>
                 );
 
             case 'LoginPageId':
                 return (
-                    <LoginPage navigator={navigator} />
+                    <LoginPage title="Welcome!" navigator={navigator}
+                    />
                 );
 
             case 'RegisterPageId':
                 return (
-                    <RegisterPage navigator={navigator} />
+                    <RegisterPage title="New user" navigator={navigator} />
                 );
 
             case 'RegisteredPageId':
                 return (
-                    <RegisteredPage navigator={navigator} />
+                    <RegisteredPage title="Sign up completed!" navigator={navigator} />
                 );
 
             case 'PickUpLocationPageId':
                 return (
-                    <PickUpLocationPage />
+                    <PickUpLocationPage navigator={navigator} />
                 );
 
             default:
                 return (
-                    <SplashPage navigator={navigator} />
+                    <SplashPage title="Uber App" navigator={navigator} />
                 );
         }
     }

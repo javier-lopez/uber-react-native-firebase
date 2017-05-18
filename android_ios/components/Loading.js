@@ -5,11 +5,15 @@ import {
   Text,
 } from 'react-native';
 
+var text="Loading ..."
+
 export default class Loading extends Component {
     render() {
+        if (this.props.text) { text = this.props.text };
+
         return (
             <View style={LoadingStyles.container}>
-                <Text style={LoadingStyles.loading}>Cargando ... </Text>
+                <Text style={LoadingStyles.loading}>{text}</Text>
             </View>
         );
     }
