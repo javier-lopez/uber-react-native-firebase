@@ -9,7 +9,7 @@ import {
 import MapView from 'react-native-maps';
 var {GooglePlacesAutocomplete} = require('react-native-google-places-autocomplete');
 
-import Loading from './Loading'
+import Loading from '../components/Loading'
 
 const uberIcon   = require('../../assets/img/uber.png')
 const searchIcon = require('../../assets/img/search.png')
@@ -136,14 +136,12 @@ export default class Map extends Component {
                              loadingEnabled={true} loadingIndicatorColor="#999999"
                              onRegionChange={this.onRegionChange.bind(this)}>
                         <MapView.Marker draggable coordinate={passengerLocation}
-                                        onDragEnd = {(e) => {this.onPassengerLocationChange(e.nativeEvent.coordinate)}}>
-                        </MapView.Marker>
+                            onDragEnd = {(e) => {this.onPassengerLocationChange(e.nativeEvent.coordinate)}}/>
 
                         {ubers.map((uber, index) =>
                             <MapView.Marker title={uber.name} description={uber.type} image={uberIcon}
                             style={styles.uber} coordinate={uber.position} key={uber.id}/>
                         )}
-
                     </MapView>
 
                     <View style={styles.searchContainer}>
@@ -159,26 +157,27 @@ export default class Map extends Component {
                             //currentLocationLabel='Current Location'
 
                             onPress={(data, details = null) => {
-                                     //'details' is initialized on fetchDetails = true
-                                      let newRegion = {
-                                          latitude:       details.geometry.location.lat,
-                                          longitude:      details.geometry.location.lng,
-                                          latitudeDelta:  this.state.mapRegion.latitudeDelta,
-                                          longitudeDelta: this.state.mapRegion.longitudeDelta,
-                                      }
+                                //'details' is initialized on fetchDetails = true
+                                let newRegion = {
+                                    latitude:       details.geometry.location.lat,
+                                    longitude:      details.geometry.location.lng,
+                                    latitudeDelta:  this.state.mapRegion.latitudeDelta,
+                                    longitudeDelta: this.state.mapRegion.longitudeDelta,
+                                }
 
-                                      //investigate why it's required to use a callback function
-                                      //to force a re-render()
-                                      this.setState({mapRegion: newRegion}, this.updateRegionCallback);
+                                //investigate why it's required to use a callback function
+                                //to force a re-render()
+                                this.setState({mapRegion: newRegion}, this.updateRegionCallback);
 
-                                      //console.log('details', details);
-                                      //console.log('lat', details.geometry.location.lat);
-                                      //console.log('lng', details.geometry.location.lng);
-                                    }}
+                                //console.log('details', details);
+                                //console.log('lat', details.geometry.location.lat);
+                                //console.log('lng', details.geometry.location.lng);
+                            }}
                             query={{
                               key:      'AIzaSyDF_xPY72A9X_dy13ud06Lg6Die6BJ_98M',
                               language: 'es',
-                              types:    'geocode', }} />
+                              types:    'geocode', }}
+                        />
                     </View>
 
                     <View style={styles.buttonContainer}>

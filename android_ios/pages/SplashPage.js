@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-const logo = require('../../assets/img/logo.png')
+var logo  = require('../../assets/img/logo.png')
 
 export default class SplashPage extends Component {
     componentWillMount() {
@@ -19,10 +19,12 @@ export default class SplashPage extends Component {
     }
 
     render() {
+        if (this.props.logo)  { logo  = this.props.logo };
+
         return (
             <View style={SplashPageStyles.container}>
                 <Image source={logo}/>
-                <Text style={SplashPageStyles.splash}>SplashPage</Text>
+                <Text style={SplashPageStyles.splash}>{this.props.title}</Text>
             </View>
         );
     }
