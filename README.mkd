@@ -3,6 +3,8 @@ About
 
 Sample android/ios uber-like app, developed monthly in [foobar](https://github.com/foobar-org) as an exercise to learn [react-native](http://facebook.github.io/react-native/)/[firebase](https://firebase.google.com/).
 
+Warning: Firebase is not implemented yet. 
+
 Usage
 -----
 
