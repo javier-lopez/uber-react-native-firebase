@@ -8,6 +8,7 @@
 		"release-android": "cd android && ./gradlew assembleRelease"
 	},
 	"dependencies": {
+		"firebase": "^4.0.0",
 		"react": "~15.4.1",
 		"react-native": "0.42.0",
 		"react-native-google-places-autocomplete": "^1.2.11",

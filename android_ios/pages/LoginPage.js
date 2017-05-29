@@ -9,8 +9,8 @@ import {
     ActivityIndicator,
 } from 'react-native';
 
-var usernamePlaceholder="Username";
-var passwordPlaceholder="Password";
+var usernamePlaceholder="username@domain.tld";
+var passwordPlaceholder="password";
 var submit="Login";
 var register="Register";
 
@@ -18,7 +18,40 @@ export default class Login extends Component {
     state = {
         email:    null,
         password: null,
-        loading: false,
+        loading:  false,
+    }
+
+    login(){
+        //while waiting for the firebase server show the loading indicator.
+        this.setState({ loading: true });
+
+        if (this.state.email && this.state.password) {
+            //log in and display an alert to tell the user what happened.
+            this.props.firebaseDAO.auth().signInWithEmailAndPassword(
+                this.state.email, this.state.password).then((userData) => {
+                    this.setState({
+                        //clear out the fields when the user logs in and hide the progress indicator.
+                        email:         null,
+                        password:      null,
+                        loading:       false
+                    });
+
+                    //alert("Login successful, userData: " + JSON.stringify(userData, null, 4));
+
+                    //redirect to the pickup page
+                    this.props.navigator.push( {
+                        id:   'PickUpLocationPageId',
+                        name: 'PickUpLocationPage',
+                    });
+                }).catch((error) => {
+                    //leave the fields filled when an error occurs and hide the progress indicator.
+                    this.setState({ loading: false });
+                    alert(error.message + " Please try again");
+                });
+        } else {
+            alert('Please fill all the required fields.');
+            this.setState({ loading: false });
+        }
     }
 
     render() {
@@ -38,17 +71,20 @@ export default class Login extends Component {
                     <View>
                         <Text style={LoginPageStyles.title}>{this.props.title}</Text>
                         <View style={{margin:15}} />
-                        <TextInput style={LoginPageStyles.textInput} placeholder={usernamePlaceholder}/>
-                        <TextInput style={LoginPageStyles.textInput} secureTextEntry={true}
-                            placeholder={passwordPlaceholder} />
+
+                        <TextInput style={LoginPageStyles.textInput}
+                            placeholder={usernamePlaceholder}
+                            onChangeText={(text) => this.setState({email: text})}
+                            value={this.state.email} />
+                        <TextInput style={LoginPageStyles.textInput}
+                            secureTextEntry={true}
+                            placeholder={passwordPlaceholder}
+                            onChangeText={(text) => this.setState({password: text})}
+                            value={this.state.password} />
                         <View style={{margin:7}} />
+
                         <TouchableHighlight style={LoginPageStyles.primaryButton}
-                            onPress={() => this.props.navigator.push(
-                                {
-                                    id:   'PickUpLocationPageId',
-                                    name: 'PickUpLocationPage',
-                                }
-                        )}>
+                            onPress={this.login.bind(this)}>
                             <Text style={LoginPageStyles.primaryButtonText}>{submit}</Text>
                         </TouchableHighlight>
 
@@ -66,7 +102,13 @@ export default class Login extends Component {
                 </View>
             );
         } else {
-            return <ActivityIndicator size="large"/>
+            return (
+                <View style={LoginPageStyles.container}>
+                    <View style={LoginPageStyles.body}>
+                        <ActivityIndicator size="large"/>
+                    </View>
+                </View>
+            );
         }
     }
 }

@@ -9,18 +9,63 @@ import {
     ActivityIndicator,
 } from 'react-native';
 
-var usernamePlaceholder="Username";
-var passwordPlaceholder="Password";
-var passwordAgainPlaceholder="Repeat Password";
+var usernamePlaceholder="username@domain.tld";
+var passwordPlaceholder="password";
+var passwordAgainPlaceholder="repeat password";
 var submit="Sign Up";
 var cancel="Cancel";
 
-export default class Login extends Component {
+export default class Register extends Component {
     state = {
         email:         null,
         password:      null,
         passwordAgain: null,
+        //used to display a progress indicator if waiting for a network response.
         loading:       false,
+    }
+
+    register() {
+        //while waiting for the firebase server show the loading indicator.
+        this.setState({ loading: true });
+
+        if (!this.state.email && !this.state.password && !this.state.passwordAgain) {
+            this.setState({ loading: false });
+            alert('Please fill all the required fields.');
+            return
+        }
+
+        if (this.state.password === this.state.passwordAgain) {
+            //make a call to firebase to create a new user.
+            this.props.firebaseDAO.auth().createUserWithEmailAndPassword(
+                this.state.email, this.state.password).then(() => {
+                    //catch are methods that we call on the Promise returned from
+                    //createUserWithEmailAndPassword
+                    this.setState({
+                        //clear out the fields when the user logs in and hide the progress indicator.
+                        email:         null,
+                        password:      null,
+                        passwordAgain: null,
+                        loading:       false
+                    });
+
+                    //redirect to the login page
+                    this.props.navigator.push( {
+                        id:   'RegisteredPageId',
+                        name: 'RegisteredPage',
+                    });
+                }).catch((error) => {
+                    //leave the fields filled when an error occurs and hide the progress indicator.
+                    this.setState({ loading: false });
+                    alert("Account creation failed: " + error.message );
+                });
+        } else {
+            alert('Password doesn\'t match');
+            this.setState({
+                password:      null,
+                passwordAgain: null,
+                loading:       false
+            });
+        }
     }
 
     render() {
@@ -42,19 +87,25 @@ export default class Login extends Component {
                     <View>
                         <Text style={RegisterPageStyles.title}>{this.props.title}</Text>
                         <View style={{margin:15}} />
-                        <TextInput style={RegisterPageStyles.textInput} placeholder={usernamePlaceholder}/>
-                        <TextInput style={RegisterPageStyles.textInput} secureTextEntry={true}
-                            placeholder={passwordPlaceholder} />
-                        <TextInput style={RegisterPageStyles.textInput} secureTextEntry={true}
-                            placeholder={passwordAgainPlaceholder} />
+
+                        <TextInput style={RegisterPageStyles.textInput}
+                            placeholder={usernamePlaceholder}
+                            onChangeText={(text) => this.setState({email: text})}
+                            value={this.state.email} />
+                        <TextInput style={RegisterPageStyles.textInput}
+                            secureTextEntry={true}
+                            placeholder={passwordPlaceholder}
+                            onChangeText={(text) => this.setState({password: text})}
+                            value={this.state.password} />
+                        <TextInput style={RegisterPageStyles.textInput}
+                            secureTextEntry={true}
+                            placeholder={passwordAgainPlaceholder}
+                            onChangeText={(text) => this.setState({passwordAgain: text})}
+                            value={this.state.passwordAgain} />
                         <View style={{margin:7}} />
+
                         <TouchableHighlight style={RegisterPageStyles.primaryButton}
-                            onPress={() => this.props.navigator.push(
-                                {
-                                    id:   'RegisteredPageId',
-                                    name: 'RegisteredPage',
-                                }
-                        )}>
+                            onPress={this.register.bind(this)}>
                             <Text style={RegisterPageStyles.primaryButtonText}>{submit}</Text>
                         </TouchableHighlight>
 
@@ -72,9 +123,14 @@ export default class Login extends Component {
                 </View>
             );
         } else {
-            return <ActivityIndicator size="large"/>
+            return (
+                <View style={RegisterPageStyles.container}>
+                    <View style={RegisterPageStyles.body}>
+                        <ActivityIndicator size="large"/>
+                    </View>
+                </View>
+            );
         }
-
     }
 }
 

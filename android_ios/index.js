@@ -3,11 +3,24 @@ import {
   Navigator,
 } from 'react-native';
 
+import * as firebase from 'firebase';
+
 import SplashPage         from './pages/SplashPage'
 import LoginPage          from './pages/LoginPage'
 import RegisterPage       from './pages/RegisterPage'
 import RegisteredPage     from './pages/RegisteredPage'
 import PickUpLocationPage from './pages/PickUpLocationPage'
+
+const firebaseConfig = {
+        apiKey:            "AIzaSyCbWYQPeyxGHNWqEajaPjOnCjshzN95sCo",
+        authDomain:        "uber-react-native-firebase.firebaseDAO.com",
+        databaseURL:       "https://uber-react-native-firebase.firebaseio.com",
+        projectId:         "uber-react-native-firebase",
+        storageBucket:     "uber-react-native-firebase.appspot.com",
+        messagingSenderId: "176780898385"
+};
+
+const firebaseDAO = firebase.initializeApp(firebaseConfig);
 
 export default class UberFooBarReactNativeFirebase extends Component {
     renderScene(route, navigator) {
@@ -19,13 +32,18 @@ export default class UberFooBarReactNativeFirebase extends Component {
 
             case 'LoginPageId':
                 return (
-                    <LoginPage title="Welcome!" navigator={navigator}
+                    <LoginPage title="Welcome!"
+                        navigator={navigator}
+                        firebaseDAO={firebaseDAO}
                     />
                 );
 
             case 'RegisterPageId':
                 return (
-                    <RegisterPage title="New user" navigator={navigator} />
+                    <RegisterPage title="New user"
+                        navigator={navigator}
+                        firebaseDAO={firebaseDAO}
+                    />
                 );
 
             case 'RegisteredPageId':
@@ -35,7 +53,10 @@ export default class UberFooBarReactNativeFirebase extends Component {
 
             case 'PickUpLocationPageId':
                 return (
-                    <PickUpLocationPage navigator={navigator} />
+                    <PickUpLocationPage
+                        navigator={navigator}
+                        firebaseDAO={firebaseDAO}
+                    />
                 );
 
             default:

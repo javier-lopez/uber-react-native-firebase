@@ -16,8 +16,9 @@ const searchIcon = require('../../assets/img/search.png')
 
 export default class Map extends Component {
     state = {
-        mapRegion:         null,
+        user:              null,
         passengerLocation: null,
+        mapRegion:         null,
         ubers:             null,
         type:              'x',
         gpsAccuracy:       null,
@@ -25,6 +26,9 @@ export default class Map extends Component {
     watchID = null
 
     componentWillMount() {
+        const userData = this.props.firebaseDAO.auth().currentUser;
+        this.setState({user: userData});
+
         this.watchID = navigator.geolocation.watchPosition((position) => {
             let region = {
                 latitude:       position.coords.latitude,
@@ -122,20 +126,21 @@ export default class Map extends Component {
 
     render() {
         //Too much magic!!!!
-        const { mapRegion, passengerLocation, ubers, gpsAccuracy} = this.state;
+        const {user, passengerLocation, mapRegion, ubers, gpsAccuracy} = this.state;
         //console.log('render()');
-        //console.log('mapRegion: '        , mapRegion);
+        //console.log('user: '             , user);
         //console.log('passengerLocation: ', passengerLocation);
+        //console.log('mapRegion: '        , mapRegion);
         //console.log('gpsAccuracy: '      , gpsAccuracy);
         //console.log('ubers: '            , ubers);
 
-        if (mapRegion && passengerLocation && ubers) {
+        if (user && passengerLocation && mapRegion && ubers) {
             return (
                 <View style={styles.container}>
                     <MapView style={styles.map} region={mapRegion}
                              loadingEnabled={true} loadingIndicatorColor="#999999"
                              onRegionChange={this.onRegionChange.bind(this)}>
-                        <MapView.Marker draggable coordinate={passengerLocation}
+                        <MapView.Marker title={user.email} description={user.uid} draggable coordinate={passengerLocation}
                             onDragEnd = {(e) => {this.onPassengerLocationChange(e.nativeEvent.coordinate)}}/>
 
                         {ubers.map((uber, index) =>
@@ -200,7 +205,7 @@ export default class Map extends Component {
             );
         } else {
             return (
-                <Loading />
+                <Loading text='Redirecting ...' />
            );
         }
   }
