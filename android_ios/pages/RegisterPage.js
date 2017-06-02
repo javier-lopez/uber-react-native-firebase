@@ -7,6 +7,7 @@ import {
     StyleSheet,
     TouchableHighlight,
     ActivityIndicator,
+    Navigator,
 } from 'react-native';
 
 var usernamePlaceholder      = "username@domain.tld";
@@ -114,6 +115,7 @@ export default class RegisterPage extends Component {
                                 {
                                     id:   'LoginPageId',
                                     name: 'LoginPage',
+                                    sceneConfig: Navigator.SceneConfigs.FloatFromLeft,
                                 }
                         )}>
                             <Text style={RegisterPageStyles.transparentButtonText}>{cancel}</Text>
