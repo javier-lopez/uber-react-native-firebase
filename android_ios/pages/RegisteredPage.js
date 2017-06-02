@@ -8,7 +8,7 @@ import {
 var title       = "Sign up completed!"
 var description = "You can now login, redirecting ..."
 
-export default class SplashPage extends Component {
+export default class RegisteredPage extends Component {
     componentWillMount() {
         var navigator = this.props.navigator;
         setTimeout(() => {
@@ -36,19 +36,19 @@ export default class SplashPage extends Component {
 
 const RegisteredPageStyles = StyleSheet.create({
     container: {
-        flex:1,
-        flexDirection:'row',
-        alignItems: 'center',
+        flex:           1,
+        flexDirection:  'row',
+        alignItems:     'center',
         justifyContent: 'center',
     },
     title: {
-        fontSize: 25,
+        fontSize:  25,
         textAlign: 'center',
-        margin: 5,
+        margin:    5,
     },
     loading: {
-        fontSize: 15,
+        fontSize:  15,
         textAlign: 'center',
-        margin: 10,
+        margin:    10,
     },
 });

@@ -9,12 +9,12 @@ import {
     ActivityIndicator,
 } from 'react-native';
 
-var usernamePlaceholder="username@domain.tld";
-var passwordPlaceholder="password";
-var submit="Login";
-var register="Register";
+var usernamePlaceholder = "username@domain.tld";
+var passwordPlaceholder = "password";
+var submit              = "Login";
+var register            = "Register";
 
-export default class Login extends Component {
+export default class LoginPage extends Component {
     state = {
         email:    null,
         password: null,
@@ -116,43 +116,43 @@ export default class Login extends Component {
 const LoginPageStyles = StyleSheet.create({
     container: {
         alignItems: 'stretch',
-        flex: 1
+        flex:       1
     },
     body: {
-        flex: 9,
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'center',
+        flex:            9,
+        flexDirection:   'row',
+        alignItems:      'center',
+        justifyContent:  'center',
         backgroundColor: '#F5FCFF',
     },
     title: {
-        fontSize: 25,
+        fontSize:  25,
         textAlign: 'center',
-        margin: 5,
+        margin:    5,
     },
     textInput: {
-        height: 40,
-        width: 250,
+        height:      40,
+        width:       250,
         borderWidth: 1
     },
     transparentButton: {
         marginTop: 5,
-        padding:  15,
+        padding:   15,
     },
     transparentButtonText: {
-        color: '#0485A9',
+        color:     '#0485A9',
         textAlign: 'center',
-        fontSize: 16
+        fontSize:  16
     },
     primaryButton: {
-        marginTop: 10,
-        padding:   10,
+        marginTop:       10,
+        padding:         10,
         backgroundColor: 'black',
     },
     primaryButtonText: {
-        color: '#FFF',
+        color:     '#FFF',
         textAlign: 'center',
-        fontSize: 18
+        fontSize:  18
     },
     image: {
         width:  100,

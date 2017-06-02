@@ -32,14 +32,14 @@ export default class SplashPage extends Component {
 
 const SplashPageStyles = StyleSheet.create({
     container: {
-        flex:1,
-        flexDirection:'row',
-        alignItems: 'center',
+        flex:           1,
+        flexDirection:  'row',
+        alignItems:     'center',
         justifyContent: 'center',
     },
     splash: {
-        fontSize: 20,
+        fontSize:  20,
         textAlign: 'center',
-        margin: 10,
+        margin:    10,
     },
 });

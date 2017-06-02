@@ -14,7 +14,7 @@ import Loading from '../components/Loading'
 const uberIcon   = require('../../assets/img/uber.png')
 const searchIcon = require('../../assets/img/search.png')
 
-export default class Map extends Component {
+export default class PickUpLocationPage extends Component {
     state = {
         user:              null,
         passengerLocation: null,
@@ -26,8 +26,7 @@ export default class Map extends Component {
     watchID = null
 
     componentWillMount() {
-        const userData = this.props.firebaseDAO.auth().currentUser;
-        this.setState({user: userData});
+        this.setState({user: this.props.firebaseDAO.auth().currentUser});
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
             let region = {
@@ -124,6 +123,25 @@ export default class Map extends Component {
         this.onPassengerLocationChange(coords);
     }
 
+    submitPickupLocation() {
+        this.writePassengerData(this.state.passengerLocation, this.state.ubers[this.getRandomInt(0,4)]);
+
+        this.props.navigator.push( {
+            id:   'DestinationLocationPageId',
+            name: 'DestinationLocationPage',
+            pickUpLocation: this.state.passengerLocation,
+        });
+    }
+
+    writePassengerData(coords, uber) {
+        const userDAO = this.props.firebaseDAO.database().ref('users/' + this.state.user.uid);
+
+        userDAO.update({
+            pickUpLocation: coords,
+            uber:           uber,
+        });
+    }
+
     render() {
         //Too much magic!!!!
         const {user, passengerLocation, mapRegion, ubers, gpsAccuracy} = this.state;
@@ -185,20 +203,29 @@ export default class Map extends Component {
                         />
                     </View>
 
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={() => {
-                            this.setState({type: 'pool'}, this.updateTypeCallback); }}>
-                            <Text>Uber Pool</Text>
+                    <View style={styles.typeUberContainer}>
+                        <TouchableOpacity
+                            style={[styles.button, this.state.type === 'pool' && styles.buttonActive]}
+                            onPress={() => { this.setState({type: 'pool'}, this.updateTypeCallback); }}>
+                            <Text style={[this.state.type === 'pool' && styles.textActive ]}>Uber Pool</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button} onPress={() => {
-                            this.setState({type: 'x'}, this.updateTypeCallback); }}>
-                            <Text>Uber X</Text>
+                        <TouchableOpacity
+                            style={[styles.button, this.state.type === 'x' && styles.buttonActive]}
+                            onPress={() => { this.setState({type: 'x'}, this.updateTypeCallback); }}>
+                            <Text style={[this.state.type === 'x' && styles.textActive ]}>Uber X</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button} onPress={() => {
-                            this.setState({type: 'black'}, this.updateTypeCallback); }}>
-                            <Text>Uber Black</Text>
+                        <TouchableOpacity
+                            style={[styles.button, this.state.type === 'black' && styles.buttonActive]}
+                            onPress={() => { this.setState({type: 'black'}, this.updateTypeCallback); }}>
+                            <Text style={[this.state.type === 'black' && styles.textActive ]}>Uber Black</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.submitContainer}>
+                        <TouchableOpacity onPress={this.submitPickupLocation.bind(this)}>
+                            <Text style={styles.submitButton} >{'Set PickUp Location'.toUpperCase()}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -213,14 +240,12 @@ export default class Map extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
+        flex:            1,
+        justifyContent:  'center',
         backgroundColor: '#F5FCFF',
     },
     map: {
         ...StyleSheet.absoluteFillObject,
-        //TODO >> find out a smarter way to make room for the location search bar
-        //marginTop: 42,
     },
     uber: {
         flex:   1,
@@ -229,19 +254,35 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         flex: 1,
-        //zIndex: 1, //move to front
-        //backgroundColor: 'rgba(255,255,255,0.8)',
     },
-    buttonContainer: {
+    typeUberContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
     },
+    submitContainer: {
+        //flexDirection: 'row',
+        //justifyContent: 'center',
+    },
     button: {
-        alignItems: 'center',
+        alignItems:      'center',
         backgroundColor: 'rgba(255,255,255,0.7)',
-        borderRadius: 10,
-        padding: 10,
-        margin:  10,
+        borderRadius:    10,
+        padding:         10,
+        margin:          10,
+    },
+    buttonActive: {
+        backgroundColor: 'black',
+    },
+    textActive: {
+        color: 'white',
+    },
+    submitButton: {
+        backgroundColor: 'black',
+        color:           'white',
+        padding:         10,
+        marginTop:       2,
+        textAlign:       'center',
+        fontSize:        16
     },
 });
 

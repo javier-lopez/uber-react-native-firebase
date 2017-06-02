@@ -5,11 +5,13 @@ import {
 
 import * as firebase from 'firebase';
 
-import SplashPage         from './pages/SplashPage'
-import LoginPage          from './pages/LoginPage'
-import RegisterPage       from './pages/RegisterPage'
-import RegisteredPage     from './pages/RegisteredPage'
-import PickUpLocationPage from './pages/PickUpLocationPage'
+import SplashPage              from './pages/SplashPage'
+import LoginPage               from './pages/LoginPage'
+import RegisterPage            from './pages/RegisterPage'
+import RegisteredPage          from './pages/RegisteredPage'
+import PickUpLocationPage      from './pages/PickUpLocationPage'
+import DestinationLocationPage from './pages/DestinationLocationPage'
+import ResultPage              from './pages/ResultPage'
 
 const firebaseConfig = {
         apiKey:            "AIzaSyCbWYQPeyxGHNWqEajaPjOnCjshzN95sCo",
@@ -54,6 +56,23 @@ export default class UberFooBarReactNativeFirebase extends Component {
             case 'PickUpLocationPageId':
                 return (
                     <PickUpLocationPage
+                        navigator={navigator}
+                        firebaseDAO={firebaseDAO}
+                    />
+                );
+
+            case 'DestinationLocationPageId':
+                return (
+                    <DestinationLocationPage
+                        navigator={navigator}
+                        firebaseDAO={firebaseDAO}
+                        pickUpLocation={route.pickUpLocation}
+                    />
+                );
+
+            case 'ResultPageId':
+                return (
+                    <ResultPage
                         navigator={navigator}
                         firebaseDAO={firebaseDAO}
                     />

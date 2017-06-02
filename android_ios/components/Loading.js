@@ -21,13 +21,13 @@ export default class Loading extends Component {
 
 const LoadingStyles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
+        flex:            1,
+        justifyContent:  'center',
         backgroundColor: '#F5FCFF',
     },
     loading: {
-        fontSize: 20,
+        fontSize:  20,
         textAlign: 'center',
-        margin: 10,
+        margin:    10,
     },
 });
