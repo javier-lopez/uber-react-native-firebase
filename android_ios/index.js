@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   Navigator,
+  BackAndroid,
 } from 'react-native';
 
 import * as firebase from 'firebase';
@@ -25,6 +26,29 @@ const firebaseConfig = {
 const firebaseDAO = firebase.initializeApp(firebaseConfig);
 
 export default class UberFooBarReactNativeFirebase extends Component {
+    constructor(props) {
+        super(props)
+        this.navigator = null;
+
+        //black magic
+        this.handleBack = (() => {
+            if (this.navigator && this.navigator.getCurrentRoutes().length > 1){
+                this.navigator.pop();
+                return true; //avoid closing the app
+            }
+
+            return false; //close the app
+        }).bind(this) //don't forget bind this
+    }
+
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBack);
+    }
+
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this.handleBack);
+    }
+
     renderScene(route, navigator) {
         switch(route.id) {
             case 'SplashPageId':
@@ -88,6 +112,7 @@ export default class UberFooBarReactNativeFirebase extends Component {
     render() {
         return (
             <Navigator
+                ref={navigator => {this.navigator = navigator}}
                 initialRoute={{id: 'SplashPageId', name: 'SplashPage'}}
                 renderScene={this.renderScene.bind(this)}
                 configureScene={(route) => {
