@@ -1,9 +1,19 @@
 About
 -----
 
-Sample android/ios uber-like app, developed monthly in [foobar](https://github.com/foobar-org) as an exercise to learn [react-native](http://facebook.github.io/react-native/)/[firebase](https://firebase.google.com/).
+Sample android/ios uber-like app developed as an exercise to learn [react-native](http://facebook.github.io/react-native/)/[firebase](https://firebase.google.com/).
 
 **WARNING**: Currently the app is an early alpha stage, you should look at other samples for detailed react-native/firebase bits.
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/javier-lopez/uber-react-native-firebase/master/screenshots/login.png"            width="280" alt="login" />
+    <img src="https://raw.githubusercontent.com/javier-lopez/uber-react-native-firebase/master/screenshots/signup.png"           width="280" alt="signup"/>
+    <img src="https://raw.githubusercontent.com/javier-lopez/uber-react-native-firebase/master/screenshots/signup-completed.png" width="280" alt="signup completed"/>
+    <img src="https://raw.githubusercontent.com/javier-lopez/uber-react-native-firebase/master/screenshots/loading.png"          width="280" alt="loading"/>
+    <img src="https://raw.githubusercontent.com/javier-lopez/uber-react-native-firebase/master/screenshots/pickup.png"           width="280" alt="pickup"/>
+    <img src="https://raw.githubusercontent.com/javier-lopez/uber-react-native-firebase/master/screenshots/destination.png"      width="280" alt="destination"/>
+    <img src="https://raw.githubusercontent.com/javier-lopez/uber-react-native-firebase/master/screenshots/coords.png"           width="280" alt="data result"/>
+</p>
 
 Usage
 -----
@@ -36,5 +46,3 @@ To enable live reloading use the "shake" gesture or press Ctrl-m in Genymotion a
 Login to the virtual environment and follow the instructions to get started.
 
     vagrant ssh
-
-- Have fun!
